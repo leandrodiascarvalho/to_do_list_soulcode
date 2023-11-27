@@ -1,42 +1,102 @@
+:root {
+  --color-dark: rgb(14, 14, 14);
+  --color-dark2: rgb(32, 32, 32);
+  --color-dark3: rgb(22, 22, 22);
+  --color-white: #fff;
+  --color-green: rgb(103, 195, 80);
+  --color-green2: rgb(51, 149, 26);
+  --color-red: rgb(184, 40, 35);
+  --color-red2: rgb(146, 22, 17);
+}
+
 body {
-  font-family: "Arial", sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
+  font-family: "Lato";
+  background-color: var(--color-dark);
+  color: var(--color-white);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
+  gap: 4rem;
 }
 
-.container {
-  text-align: center;
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
 }
 
-input {
-  padding: 10px;
-  margin-right: 5px;
+.content--add-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
-button {
-  padding: 10px;
+#input-new-task,
+#btn-new-task {
+  border: none;
+  font-size: 1rem;
+  outline: none;
+  padding: 1rem;
 }
 
-ul {
-  list-style: none;
+#input-new-task {
+  width: 20rem;
+  border-radius: 1rem;
+}
+
+#btn-new-task {
+  background-color: var(--color-dark2);
+  color: var(--color-white);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+#btn-new-task:hover {
+  background-color: var(--color-dark3);
+}
+
+#to-do-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   padding: 0;
 }
 
-li {
-  background-color: #fff;
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 5px;
+#to-do-list li {
+  list-style-type: none;
+  font-size: 1.4rem;
+  text-transform: capitalize;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
-.completed {
-  text-decoration: line-through;
-  opacity: 0.7;
+#to-do-list li:hover {
+  background-color: var(--color-dark3);
+  transition: 0.4s;
+  border-radius: 1rem;
+  padding-left: 1rem;
+}
+
+#btn-ok {
+  border: none;
+  background-color: var(--color-green);
+  color: var(--color-white);
+  padding: 0.4rem 0.8rem;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+#btn-ok:hover {
+  background-color: var(--color-green2);
 }

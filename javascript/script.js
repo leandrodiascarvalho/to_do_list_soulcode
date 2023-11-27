@@ -1,124 +1,49 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // Carregar tarefas do armazenamento local (se houver)
-  loadTasks();
+const localStorageKey = "to-do-list-gn";
 
-  // Adicionar evento de clique ao botão de adicionar
-  document
-    .getElementById("taskForm")
-    .addEventListener("submit", function (event) {
-      event.preventDefault(); // Impede o envio do formulário padrão
-      addTask();
+function validateIfExistsNewTask() {
+  let values = JSON.parse(localStorage.getItem(localStorageKey) || "[]");
+  let inputValue = document.getElementById("input-new-task").value;
+  let exists = values.find((x) => x.name == inputValue);
+  return !exists ? false : true;
+}
+
+function newTask() {
+  let input = document.getElementById("input-new-task");
+  input.style.border = "";
+
+  // validation
+  if (!input.value) {
+    input.style.border = "1px solid red";
+    alert("Digite algo para inserir em sua lista");
+  } else if (validateIfExistsNewTask()) {
+    alert("Já existe uma task com essa descrição");
+  } else {
+    // increment to localStorage
+    let values = JSON.parse(localStorage.getItem(localStorageKey) || "[]");
+    values.push({
+      name: input.value,
     });
-});
+    localStorage.setItem(localStorageKey, JSON.stringify(values));
+    showValues();
+  }
+  input.value = "";
+}
 
-function addTask() {
-  // Obter o valor da nova tarefa
-  let taskInput = document.getElementById("taskInput");
-  let taskText = taskInput.value.trim();
-
-  // Verificar se a entrada não está vazia
-  if (taskText !== "") {
-    // Criar um novo elemento de lista
-    let newTask = document.createElement("li");
-    newTask.n;
-    innerHTML = `
-          <span>${taskText}</span>
-          <button onclick="toggleTask(this)">Concluir</button>
-          <button onclick="deleteTask(this)">Excluir</button>
-      `;
-
-    // Adicionar a nova tarefa à lista
-    document.getElementById("taskList").appendChild(newTask);
-
-    // Limpar o campo de entrada
-    taskInput.value = "";
-
-    // Salvar a lista de tarefas no armazenamento local
-    saveTasks();
+function showValues() {
+  let values = JSON.parse(localStorage.getItem(localStorageKey) || "[]");
+  let list = document.getElementById("to-do-list");
+  list.innerHTML = "";
+  for (let i = 0; i < values.length; i++) {
+    list.innerHTML += `<li>${values[i]["name"]}<button id='btn-ok' onclick='removeItem("${values[i]["name"]}")'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/></svg></button></li>`;
   }
 }
 
-function toggleTask(button) {
-  // Alternar a classe 'completed' da tarefa
-  let task = button.parentNode;
-  task.classList.toggle("completed");
-
-  // Alterar o texto do botão com base no estado da tarefa
-  let buttonText = task.classList.contains("completed")
-    ? "Desfazer"
-    : "Concluir";
-  button.textContent = buttonText;
-
-  // Salvar a lista de tarefas no armazenamento local
-  saveTasks();
+function removeItem(data) {
+  let values = JSON.parse(localStorage.getItem(localStorageKey) || "[]");
+  let index = values.findIndex((x) => x.name == data);
+  values.splice(index, 1);
+  localStorage.setItem(localStorageKey, JSON.stringify(values));
+  showValues();
 }
 
-function deleteTask(button) {
-  // Remover a tarefa da lista
-  let task = button.closest("li"); // Encontrar o elemento pai 'li' mais próximo
-  if (task) {
-    task.remove(); // Utilizar o método 'remove()' para remover o elemento
-    // Salvar a lista de tarefas no armazenamento local (chamando a função saveTasks)
-    saveTasks();
-  }
-}
-//function deleteCompletedTasks() {
-// Obter todas as tarefas concluídas
-//let completedTasks = document.querySelectorAll("#taskList .completed");
-
-// Remover cada tarefa concluída da lista
-//completedTasks.forEach(function (task) {
-//task.parentNode.removeChild(task);
-// });
-
-// Salvar a lista de tarefas no armazenamento local
-//   saveTasks();
-// }
-
-function saveTasks() {
-  // Obter todas as tarefas
-  let tasks = document.querySelectorAll("#taskList li");
-
-  // Criar uma matriz para armazenar as tarefas
-  let taskArray = [];
-
-  // Adicionar cada tarefa à matriz
-  tasks.forEach(function (task) {
-    let taskTextElement = task.querySelector("span");
-
-    // Verificar se o elemento 'span' foi encontrado
-    if (taskTextElement) {
-      let taskText = taskTextElement.innerText;
-      let isCompleted = task.classList.contains("completed");
-      taskArray.push({ text: taskText, completed: isCompleted });
-    }
-  });
-
-  // Converter a matriz de tarefas em uma string JSON e armazenar no localStorage
-  localStorage.setItem("tasks", JSON.stringify(taskArray));
-}
-
-function loadTasks() {
-  // Obter a string JSON das tarefas do localStorage
-  let tasksString = localStorage.getItem("tasks");
-
-  // Verificar se há tarefas armazenadas
-  if (tasksString) {
-    // Converter a string JSON de volta para uma matriz e adicionar as tarefas à lista
-    let tasksArray = JSON.parse(tasksString);
-    tasksArray.forEach(function (task) {
-      let newTask = document.createElement("li");
-      newTask.innerHTML = `
-              <span>${task.text}</span>
-              <button onclick="toggleTask(this)">${
-                task.completed ? "Desfazer" : "Concluir"
-              }</button>
-              <button onclick="deleteTask(this)">Excluir</button>
-          `;
-      if (task.completed) {
-        newTask.classList.add("completed");
-      }
-      document.getElementById("taskList").appendChild(newTask);
-    });
-  }
-}
+showValues();
